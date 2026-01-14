@@ -1,11 +1,26 @@
 import type { Metadata, Viewport } from 'next'
+import { Playfair_Display, Inter } from 'next/font/google'
 import './globals.css'
 import { BottomNav } from '@/components/BottomNav'
-import { TopBar } from '@/components/TopBar'
+import { DesktopNav } from '@/components/DesktopNav'
+import { AuthProvider } from '@/components/AuthProvider'
+
+// Typography - High-end fashion editorial
+const playfair = Playfair_Display({
+    subsets: ['latin'],
+    variable: '--font-serif',
+    display: 'swap',
+})
+
+const inter = Inter({
+    subsets: ['latin'],
+    variable: '--font-sans',
+    display: 'swap',
+})
 
 export const metadata: Metadata = {
-    title: 'Syren - AI Image Generator',
-    description: 'Create stunning AI-generated images in seconds',
+    title: 'Syren - AI Content Studio',
+    description: 'Create stunning AI-generated content for the modern creator',
     appleWebApp: {
         capable: true,
         statusBarStyle: 'black-translucent',
@@ -19,7 +34,7 @@ export const viewport: Viewport = {
     maximumScale: 1,
     userScalable: false,
     viewportFit: 'cover',
-    themeColor: '#09090b',
+    themeColor: '#0a0a0a',
 }
 
 export default function RootLayout({
@@ -28,24 +43,24 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en" className="dark">
-            <body className="bg-[#09090b] text-zinc-200 antialiased">
-                {/* 
-          Mobile App Shell Container
-          Forces phone-like appearance on desktop for IG ad consistency
-        */}
-                <div className="max-w-md mx-auto min-h-screen overflow-hidden relative bg-[#09090b] shadow-2xl shadow-black/50">
-                    {/* Top Bar - Fixed glassmorphism header */}
-                    <TopBar />
+        <html lang="en" className={`dark ${playfair.variable} ${inter.variable}`}>
+            <body className="min-h-screen bg-black text-white antialiased font-sans selection:bg-pink-500 selection:text-white">
+                <AuthProvider>
+                    {/* Desktop Navigation - Hidden on mobile */}
+                    <DesktopNav />
 
                     {/* Main Content Area */}
-                    <main className="pt-14 pb-20 min-h-screen">
+                    {/* Mobile: no top padding (immersive) */}
+                    {/* Desktop: top padding for fixed nav */}
+                    <main className="min-h-screen md:pt-20 pb-20 md:pb-0">
                         {children}
                     </main>
 
-                    {/* Bottom Navigation - Fixed at viewport bottom */}
-                    <BottomNav />
-                </div>
+                    {/* Mobile Bottom Navigation - Hidden on desktop */}
+                    <div className="block md:hidden">
+                        <BottomNav />
+                    </div>
+                </AuthProvider>
             </body>
         </html>
     )

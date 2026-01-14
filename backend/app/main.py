@@ -6,6 +6,7 @@ from datetime import timedelta
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
@@ -350,8 +351,6 @@ class CheckoutSessionResponse(BaseModel):
     checkout_url: str
     session_id: str
 
-
-from pydantic import BaseModel
 
 
 @app.post("/create-checkout-session", response_model=CheckoutSessionResponse, tags=["Payments"])

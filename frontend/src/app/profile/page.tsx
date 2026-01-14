@@ -1,13 +1,48 @@
 'use client'
 
-import { ChevronLeft, Crown, Zap, LogOut, Settings } from 'lucide-react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { ChevronLeft, Crown, Zap, LogOut, Settings, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useAppStore } from '@/store/useAppStore'
 
 export default function ProfilePage() {
-    const { user, logout, generations } = useAppStore()
+    const router = useRouter()
+    const { user, isAuthenticated, isAuthLoading, logout, generations } = useAppStore()
+
+    // Redirect to home if not authenticated
+    useEffect(() => {
+        if (!isAuthLoading && !isAuthenticated) {
+            router.replace('/')
+        }
+    }, [isAuthLoading, isAuthenticated, router])
+
+    // Show loading while checking auth
+    if (isAuthLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                <Loader2 className="w-8 h-8 text-accent animate-spin" />
+                <p className="mt-4 text-sm text-zinc-500">Loading...</p>
+            </div>
+        )
+    }
+
+    // Show nothing while redirecting
+    if (!isAuthenticated || !user) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                <Loader2 className="w-8 h-8 text-accent animate-spin" />
+                <p className="mt-4 text-sm text-zinc-500">Redirecting...</p>
+            </div>
+        )
+    }
 
     const completedGenerations = generations.filter(g => g.status === 'completed').length
+
+    const handleLogout = () => {
+        logout()
+        router.replace('/')
+    }
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -28,14 +63,14 @@ export default function ProfilePage() {
             <div className="p-4">
                 <div className="flex items-center gap-4 mb-6">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-accent to-purple-600 flex items-center justify-center text-2xl font-bold">
-                        {user?.email?.charAt(0).toUpperCase() || 'U'}
+                        {user.email.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                        <h2 className="text-lg font-semibold text-white">{user?.email || 'User'}</h2>
+                        <h2 className="text-lg font-semibold text-white">{user.email}</h2>
                         <div className="flex items-center gap-1 mt-1">
-                            <Crown size={14} className={user?.subscription_tier === 'free' ? 'text-zinc-500' : 'text-yellow-500'} />
+                            <Crown size={14} className={user.subscription_tier === 'free' ? 'text-zinc-500' : 'text-yellow-500'} />
                             <span className="text-sm text-zinc-400 capitalize">
-                                {user?.subscription_tier || 'Free'} Plan
+                                {user.subscription_tier} Plan
                             </span>
                         </div>
                     </div>
@@ -44,7 +79,7 @@ export default function ProfilePage() {
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-3 mb-6">
                     <div className="p-4 rounded-xl bg-surface border border-zinc-800 text-center">
-                        <p className="text-2xl font-bold text-white">{user?.credit_balance || 0}</p>
+                        <p className="text-2xl font-bold text-white">{user.credit_balance}</p>
                         <p className="text-xs text-zinc-500">Credits</p>
                     </div>
                     <div className="p-4 rounded-xl bg-surface border border-zinc-800 text-center">
@@ -58,7 +93,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Upgrade Banner */}
-                {user?.subscription_tier === 'free' && (
+                {user.subscription_tier === 'free' && (
                     <div className="rounded-xl bg-gradient-to-r from-accent/20 to-purple-600/20 border border-accent/30 p-4 mb-6">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
@@ -69,9 +104,12 @@ export default function ProfilePage() {
                                 <p className="text-xs text-zinc-400">Unlock HD images & unlimited generations</p>
                             </div>
                         </div>
-                        <button className="w-full mt-4 py-3 rounded-xl bg-accent text-white font-medium text-sm">
+                        <Link
+                            href="/pricing"
+                            className="block w-full mt-4 py-3 rounded-xl bg-accent text-white font-medium text-sm text-center"
+                        >
                             Upgrade Now
-                        </button>
+                        </Link>
                     </div>
                 )}
 
@@ -100,7 +138,7 @@ export default function ProfilePage() {
 
                 {/* Logout */}
                 <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-medium text-sm"
                 >
                     <LogOut size={18} />

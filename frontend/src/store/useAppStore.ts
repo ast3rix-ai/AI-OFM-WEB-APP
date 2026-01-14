@@ -26,6 +26,7 @@ interface AppState {
     user: User | null
     token: string | null
     isAuthenticated: boolean
+    isAuthLoading: boolean
 
     // Generations
     generations: Generation[]
@@ -34,6 +35,7 @@ interface AppState {
     // Actions
     setUser: (user: User | null) => void
     setToken: (token: string | null) => void
+    setAuthLoading: (isLoading: boolean) => void
     logout: () => void
 
     // Credits
@@ -57,6 +59,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     user: null,
     token: null,
     isAuthenticated: false,
+    isAuthLoading: true, // Start true until auth check completes
     generations: [],
     isPolling: false,
 
@@ -74,6 +77,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         }
         set({ token })
     },
+
+    setAuthLoading: (isAuthLoading) => set({ isAuthLoading }),
 
     logout: () => {
         localStorage.removeItem('syren_token')
