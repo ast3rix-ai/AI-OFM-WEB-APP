@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash \".claude/hooks/auto-sync.sh\"", "async": true, "timeout": 120, "statusMessage": "Auto-syncing to remote…" }
+        ]
+      }
+    ]
+  }
+}
