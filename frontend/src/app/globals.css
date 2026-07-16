@@ -1,205 +1,131 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ===========================================
+   EyeCandy Theme - CSS Variables
+   =========================================== */
 
-/* ==========================================
-   SYREN - Fashion Editorial Design System
-   ========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Parisienne&display=swap');
 
 :root {
-  /* Core Colors - Fashion Forward Palette */
-  --background: #0a0a0a;
-  --foreground: #ffffff;
-  --accent: #e11d48;
-  --accent-hover: #be123c;
+  /* Brand Colors */
+  --color-background: #FFF7FB;
+  --color-text: #0B0B0F;
+  --color-primary: #7C3AED;
+  --color-primary-hover: #6D28D9;
+  --color-accent: #FF4D8D;
+  --color-secondary: #06B6D4;
+  --color-card: #FFFFFF;
+  --color-border: rgba(11, 11, 15, 0.08);
+  --color-border-strong: rgba(11, 11, 15, 0.12);
 
-  /* Surface Colors */
-  --surface: #111111;
-  --surface-light: #1a1a1a;
+  /* Semantic */
+  --color-muted: #6B7280;
+  --color-success: #10B981;
 
-  /* Text Colors */
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-script: 'Parisienne', 'Brush Script MT', cursive;
+
+  /* Spacing */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(11, 11, 15, 0.05);
+  --shadow-md: 0 4px 12px rgba(11, 11, 15, 0.08);
+  --shadow-lg: 0 8px 24px rgba(11, 11, 15, 0.12);
+  --shadow-glow-pink: 0 0 20px rgba(255, 77, 141, 0.3);
+  --shadow-glow-violet: 0 0 20px rgba(124, 58, 237, 0.3);
 }
 
+/* Base styles */
 * {
   box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
 html {
-  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
-html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-tap-highlight-color: transparent;
 }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-}
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
 
-/* Scrollbar - Invisible for premium feel */
-::-webkit-scrollbar {
-  width: 0;
-  display: none;
-}
-
-/* Hide scrollbar for all elements */
-* {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Utility Classes */
-@layer utilities {
-
-  /* Safe area padding for notched phones */
-  .safe-top {
-    padding-top: env(safe-area-inset-top);
-  }
-
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  /* Hide scrollbar but keep functionality */
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Glassmorphism - Premium */
-  .glass {
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  .glass-light {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  /* Accent button */
-  .btn-accent {
-    background-color: var(--accent);
-    color: white;
-    transition: all 0.2s ease;
-  }
-
-  .btn-accent:hover {
-    background-color: var(--accent-hover);
-  }
-
-  .btn-accent:active {
-    transform: scale(0.98);
-  }
-
-  /* Text shadow for hero */
-  .text-shadow-hero {
-    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-/* ==========================================
-   Animation Classes
-   ========================================== */
+/* Custom animations */
+@keyframes float {
 
-.animate-fade-in-up {
-  opacity: 0;
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
+  0%,
   100% {
-    opacity: 1;
     transform: translateY(0);
   }
-}
 
-.animate-fade-in {
-  opacity: 0;
-  animation: fadeIn 0.8s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
+  50% {
+    transform: translateY(-8px);
   }
+}
+
+@keyframes pulse-glow {
+
+  0%,
   100% {
+    opacity: 0.6;
+  }
+
+  50% {
     opacity: 1;
   }
 }
 
-.animate-scale-in {
-  opacity: 0;
-  animation: scaleIn 0.6s ease-out forwards;
-}
-
-@keyframes scaleIn {
+@keyframes rollUp {
   0% {
-    opacity: 0;
-    transform: scale(0.95);
+    transform: translateY(0);
   }
+
   100% {
-    opacity: 1;
-    transform: scale(1);
+    transform: translateY(-50%);
   }
 }
 
-/* ==========================================
-   Component Base Styles
-   ========================================== */
-
-/* Bottom Nav Active State */
-.nav-active {
-  color: white;
+.animate-float {
+  animation: float 4s ease-in-out infinite;
 }
 
-/* Card hover effect */
-.card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
-.card-hover:active {
-  transform: scale(0.98);
+.roll-animation {
+  animation: rollUp 15s linear infinite;
 }
 
-/* Premium image loading */
-.image-loading {
-  background: linear-gradient(
-    90deg,
-    var(--surface) 0%,
-    var(--surface-light) 50%,
-    var(--surface) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+.roll-animation:hover {
+  animation-play-state: paused;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+/* Utility classes */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

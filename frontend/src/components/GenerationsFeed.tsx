@@ -2,7 +2,8 @@
 
 import { useAppStore, Generation } from '@/store/useAppStore'
 import { BlurOverlay } from './BlurOverlay'
-import { Loader2, AlertCircle, ImageIcon } from 'lucide-react'
+import { Loader2, AlertCircle, ImageIcon, Sparkles } from 'lucide-react'
+import Link from 'next/link'
 
 interface GenerationsFeedProps {
     generations?: Generation[]
@@ -24,9 +25,16 @@ export function GenerationsFeed({ generations: propGenerations }: GenerationsFee
                     <ImageIcon size={28} className="text-zinc-500" />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">No generations yet</h3>
-                <p className="text-sm text-zinc-500">
+                <p className="text-sm text-zinc-500 mb-6">
                     Create your first AI-generated image to see it here
                 </p>
+                <Link
+                    href="/create"
+                    className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium text-sm hover:from-pink-400 hover:to-rose-400 transition-all shadow-lg shadow-pink-500/25 active:scale-[0.98]"
+                >
+                    <Sparkles size={16} />
+                    Create New Image
+                </Link>
             </div>
         )
     }

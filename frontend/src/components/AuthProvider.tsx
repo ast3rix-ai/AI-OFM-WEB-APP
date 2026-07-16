@@ -8,9 +8,13 @@
  * - Validates token against /auth/me endpoint
  * - Sets user to null on 401 (no fallback to mock data)
  * - Provides isLoading state for proper UX
+ * 
+ * HYDRATION: Uses isMounted pattern to prevent SSR mismatch.
+ * The component returns null until mounted on client, ensuring
+ * consistent server/client HTML output.
  */
 
-import { useEffect, ReactNode } from 'react'
+import { useEffect, useState, ReactNode } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -21,12 +25,21 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const { setUser, setToken, setAuthLoading } = useAppStore()
+    const [isMounted, setIsMounted] = useState(false)
+
+    // Handle hydration - only render children after client mount
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
 
     useEffect(() => {
+        // Only run auth initialization after mount (client-side only)
+        if (!isMounted) return
+
         const initializeAuth = async () => {
             setAuthLoading(true)
 
-            // Check for stored token
+            // Check for stored token (safe to access localStorage here)
             const storedToken = localStorage.getItem('syren_token')
 
             if (!storedToken) {
@@ -52,19 +65,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     setToken(storedToken)
                 } else if (response.status === 401) {
                     // Token invalid/expired - clear everything
-                    console.warn('Auth token invalid or expired')
                     localStorage.removeItem('syren_token')
                     setUser(null)
                     setToken(null)
                 } else {
                     // Other error - still clear auth state for safety
-                    console.error('Auth check failed:', response.status)
                     setUser(null)
                     setToken(null)
                 }
-            } catch (error) {
+            } catch {
                 // Network error - clear auth state
-                console.error('Auth initialization error:', error)
                 setUser(null)
                 setToken(null)
             } finally {
@@ -73,7 +83,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
 
         initializeAuth()
-    }, [setUser, setToken, setAuthLoading])
+    }, [isMounted, setUser, setToken, setAuthLoading])
 
     return <>{children}</>
 }

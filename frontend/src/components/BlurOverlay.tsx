@@ -1,6 +1,7 @@
 'use client'
 
 import { Lock } from 'lucide-react'
+import Image from 'next/image'
 
 interface BlurOverlayProps {
     imageUrl: string
@@ -22,11 +23,13 @@ export function BlurOverlay({
     return (
         <div className={`relative overflow-hidden rounded-xl ${className}`}>
             {/* Base Image */}
-            <img
+            <Image
                 src={imageUrl}
                 alt={alt}
-                className={`w-full h-full object-cover transition-all duration-300 ${!isSubscribed ? 'blur-xl scale-105' : ''
-                    }`}
+                fill
+                sizes="(max-width: 768px) 50vw, 33vw"
+                className={`object-cover transition-all duration-300 ${!isSubscribed ? 'blur-xl scale-105' : ''}`}
+                unoptimized
             />
 
             {/* Blur Overlay for non-subscribed users */}

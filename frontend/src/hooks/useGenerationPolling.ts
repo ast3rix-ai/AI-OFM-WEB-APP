@@ -11,7 +11,19 @@ export function useGenerationPolling() {
     const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
     useEffect(() => {
-        if (!token) return
+        const stopPolling = () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current)
+                intervalRef.current = null
+                setPolling(false)
+            }
+        }
+
+        // Clear polling if no token (user logged out)
+        if (!token) {
+            stopPolling()
+            return
+        }
 
         const startPolling = () => {
             if (hasPendingGenerations() && !intervalRef.current) {
@@ -22,14 +34,6 @@ export function useGenerationPolling() {
             }
         }
 
-        const stopPolling = () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current)
-                intervalRef.current = null
-                setPolling(false)
-            }
-        }
-
         // Start polling if there are pending generations
         if (hasPendingGenerations()) {
             startPolling()
@@ -37,9 +41,10 @@ export function useGenerationPolling() {
             stopPolling()
         }
 
-        // Cleanup on unmount
+        // Cleanup on unmount or token change
         return () => stopPolling()
     }, [token, hasPendingGenerations, setPolling])
 
     return { isPolling }
 }
+

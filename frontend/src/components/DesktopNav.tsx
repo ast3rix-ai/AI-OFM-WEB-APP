@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sparkles } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
 
 const navLinks = [
-    { href: '/features', label: 'Features' },
-    { href: '/pricing', label: 'Pricing' },
-    { href: '/gallery', label: 'Gallery' },
+    { href: '/features', label: 'Features', hasDropdown: true },
+    { href: '/resources', label: 'Resources', hasDropdown: true },
+    { href: '/pricing', label: 'Pricing', hasDropdown: false },
+    { href: '/affiliates', label: 'Affiliates', hasDropdown: false },
 ]
 
 export function DesktopNav() {
@@ -16,69 +17,123 @@ export function DesktopNav() {
     const { isAuthenticated, isAuthLoading } = useAppStore()
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 hidden md:block">
-            {/* Glassmorphism background */}
-            <div className="backdrop-blur-md bg-black/50 border-b border-white/10">
-                {/* Inner container with consistent gutter padding */}
-                <div className="h-20 px-8 lg:px-16 xl:px-24 flex items-center justify-between">
-                    {/* Logo */}
-                    <Link
-                        href="/"
-                        className="flex items-center gap-2 group"
+        <header
+            className="hidden md:block"
+            style={{
+                height: '64px',
+                backgroundColor: '#FFF7FB',
+                borderBottom: '1px solid rgba(11, 11, 15, 0.08)',
+            }}
+        >
+            <div
+                style={{
+                    height: '100%',
+                    maxWidth: '1280px',
+                    margin: '0 auto',
+                    padding: '0 24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                }}
+            >
+                {/* Logo */}
+                <Link href="/" style={{ textDecoration: 'none' }}>
+                    <span
+                        style={{
+                            fontFamily: 'Parisienne, cursive',
+                            fontSize: '28px',
+                            color: '#7C3AED',
+                            transition: 'opacity 0.2s',
+                        }}
                     >
-                        <span className="text-2xl font-serif tracking-wide text-white group-hover:text-pink-400 transition-colors">
-                            SYREN
-                        </span>
-                    </Link>
+                        EyeCandy
+                    </span>
+                </Link>
 
-                    {/* Center Navigation */}
-                    <nav className="flex items-center gap-8">
-                        {navLinks.map(({ href, label }) => {
-                            const isActive = pathname === href
-                            return (
-                                <Link
-                                    key={href}
-                                    href={href}
-                                    className={`text-sm tracking-wide transition-colors ${isActive
-                                            ? 'text-white'
-                                            : 'text-white/60 hover:text-white'
-                                        }`}
-                                >
-                                    {label}
-                                </Link>
-                            )
-                        })}
-                    </nav>
-
-                    {/* Right Actions */}
-                    <div className="flex items-center gap-4">
-                        {isAuthLoading ? (
-                            <div className="w-24 h-10 rounded-full bg-white/10 animate-pulse" />
-                        ) : isAuthenticated ? (
+                {/* Center Nav */}
+                <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+                    {navLinks.map(({ href, label, hasDropdown }) => {
+                        const isActive = pathname === href || pathname?.startsWith(href + '/')
+                        return (
                             <Link
-                                href="/create"
-                                className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white text-sm font-medium hover:from-pink-400 hover:to-rose-400 transition-all shadow-lg shadow-pink-500/25"
+                                key={href}
+                                href={href}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    fontSize: '14px',
+                                    fontWeight: 500,
+                                    color: isActive ? '#7C3AED' : '#6B7280',
+                                    textDecoration: 'none',
+                                    transition: 'color 0.2s',
+                                }}
                             >
-                                <Sparkles size={16} />
-                                Create
+                                {label}
+                                {hasDropdown && <ChevronDown size={14} style={{ opacity: 0.6 }} />}
                             </Link>
-                        ) : (
-                            <>
-                                <Link
-                                    href="/login"
-                                    className="text-sm text-white/70 hover:text-white transition-colors"
-                                >
-                                    Sign In
-                                </Link>
-                                <Link
-                                    href="/login"
-                                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white text-sm font-medium hover:from-pink-400 hover:to-rose-400 transition-all shadow-lg shadow-pink-500/25"
-                                >
-                                    Get Started
-                                </Link>
-                            </>
-                        )}
-                    </div>
+                        )
+                    })}
+                </nav>
+
+                {/* Right Actions */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    {isAuthLoading ? (
+                        <div
+                            style={{
+                                width: '96px',
+                                height: '40px',
+                                borderRadius: '9999px',
+                                backgroundColor: 'rgba(11, 11, 15, 0.08)',
+                            }}
+                        />
+                    ) : isAuthenticated ? (
+                        <Link
+                            href="/create"
+                            style={{
+                                padding: '10px 24px',
+                                borderRadius: '9999px',
+                                backgroundColor: '#7C3AED',
+                                color: 'white',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                textDecoration: 'none',
+                                transition: 'transform 0.2s, box-shadow 0.2s',
+                            }}
+                        >
+                            Create
+                        </Link>
+                    ) : (
+                        <>
+                            <Link
+                                href="/login"
+                                style={{
+                                    fontSize: '14px',
+                                    fontWeight: 500,
+                                    color: '#0B0B0F',
+                                    textDecoration: 'none',
+                                    transition: 'color 0.2s',
+                                }}
+                            >
+                                Login
+                            </Link>
+                            <Link
+                                href="/login"
+                                style={{
+                                    padding: '10px 24px',
+                                    borderRadius: '9999px',
+                                    backgroundColor: '#7C3AED',
+                                    color: 'white',
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    textDecoration: 'none',
+                                    transition: 'transform 0.2s, box-shadow 0.2s',
+                                }}
+                            >
+                                Get Started
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
         </header>

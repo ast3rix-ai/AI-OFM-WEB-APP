@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Check, Sparkles, ArrowRight } from 'lucide-react'
+import { Check, Sparkles, ArrowRight, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useAppStore } from '@/store/useAppStore'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
-export default function SuccessPage() {
+function SuccessContent() {
     const searchParams = useSearchParams()
     const { token, user, setUser } = useAppStore()
 
@@ -16,7 +16,7 @@ export default function SuccessPage() {
     const [error, setError] = useState<string | null>(null)
 
     const isMockPayment = searchParams.get('mock_payment') === 'true'
-    const planId = searchParams.get('plan')
+    // Plan ID available via searchParams.get('plan') if needed
     const userId = searchParams.get('user_id')
 
     useEffect(() => {
@@ -107,7 +107,7 @@ export default function SuccessPage() {
                 <Check size={40} className="text-white" strokeWidth={3} />
             </div>
 
-            <h2 className="text-2xl font-bold text-white mb-2">You're All Set! 🎉</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">You&apos;re All Set! 🎉</h2>
             <p className="text-sm text-zinc-400 text-center mb-2">
                 Welcome to Pro Mode
             </p>
@@ -146,3 +146,21 @@ export default function SuccessPage() {
         </div>
     )
 }
+
+function LoadingFallback() {
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen px-4">
+            <Loader2 className="w-8 h-8 text-pink-500 animate-spin" />
+            <p className="mt-4 text-sm text-zinc-500">Loading...</p>
+        </div>
+    )
+}
+
+export default function SuccessPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <SuccessContent />
+        </Suspense>
+    )
+}
+

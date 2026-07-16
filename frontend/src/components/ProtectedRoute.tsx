@@ -20,7 +20,7 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
     const router = useRouter()
-    const { user, isAuthenticated, isAuthLoading } = useAppStore()
+    const { isAuthenticated, isAuthLoading } = useAppStore()
 
     useEffect(() => {
         // Only redirect after auth check is complete

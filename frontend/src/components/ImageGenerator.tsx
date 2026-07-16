@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Upload, Sparkles, Loader2 } from 'lucide-react'
+import Image from 'next/image'
 import { useAppStore } from '@/store/useAppStore'
 
 const STYLE_OPTIONS = [
@@ -20,7 +21,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 export function ImageGenerator() {
     const { token, user, deductCredit, addGeneration } = useAppStore()
 
-    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [, setSelectedFile] = useState<File | null>(null)
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
     const [selectedStyle, setSelectedStyle] = useState('natural')
     const [prompt, setPrompt] = useState('')
@@ -109,10 +110,12 @@ export function ImageGenerator() {
                     className="relative w-full aspect-square max-w-[200px] mx-auto rounded-2xl border-2 border-dashed border-zinc-700 hover:border-accent transition-colors bg-surface flex flex-col items-center justify-center overflow-hidden"
                 >
                     {previewUrl ? (
-                        <img
+                        <Image
                             src={previewUrl}
                             alt="Preview"
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
+                            unoptimized
                         />
                     ) : (
                         <>
@@ -149,8 +152,8 @@ export function ImageGenerator() {
                             key={style.id}
                             onClick={() => setSelectedStyle(style.id)}
                             className={`flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 rounded-xl transition-all ${selectedStyle === style.id
-                                    ? 'bg-accent text-white scale-105'
-                                    : 'bg-surface border border-zinc-800 text-zinc-400 hover:border-zinc-600'
+                                ? 'bg-accent text-white scale-105'
+                                : 'bg-surface border border-zinc-800 text-zinc-400 hover:border-zinc-600'
                                 }`}
                         >
                             <span className="text-xl">{style.emoji}</span>

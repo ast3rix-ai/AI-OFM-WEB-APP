@@ -70,10 +70,12 @@ export const useAppStore = create<AppState>((set, get) => ({
     }),
 
     setToken: (token) => {
-        if (token) {
-            localStorage.setItem('syren_token', token)
-        } else {
-            localStorage.removeItem('syren_token')
+        if (typeof window !== 'undefined') {
+            if (token) {
+                localStorage.setItem('syren_token', token)
+            } else {
+                localStorage.removeItem('syren_token')
+            }
         }
         set({ token })
     },
@@ -81,7 +83,9 @@ export const useAppStore = create<AppState>((set, get) => ({
     setAuthLoading: (isAuthLoading) => set({ isAuthLoading }),
 
     logout: () => {
-        localStorage.removeItem('syren_token')
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('syren_token')
+        }
         set({
             user: null,
             token: null,
@@ -157,7 +161,7 @@ export async function pollPendingGenerations(token: string) {
                 }
             })
         }
-    } catch (error) {
-        console.error('Polling error:', error)
+    } catch {
+        // Silently fail on polling errors - non-critical
     }
 }

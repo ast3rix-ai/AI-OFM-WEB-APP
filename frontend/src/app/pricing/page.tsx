@@ -49,7 +49,7 @@ const PLANS = [
 ]
 
 export default function PricingPage() {
-    const { token, isAuthenticated } = useAppStore()
+    const { token } = useAppStore()
     const [loading, setLoading] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
 
@@ -125,8 +125,8 @@ export default function PricingPage() {
                     <div
                         key={plan.id}
                         className={`relative rounded-2xl p-5 border transition-all ${plan.badge
-                                ? 'bg-gradient-to-br from-pink-500/10 to-purple-600/10 border-pink-500/30'
-                                : 'bg-zinc-900/50 border-zinc-800'
+                            ? 'bg-gradient-to-br from-pink-500/10 to-purple-600/10 border-pink-500/30'
+                            : 'bg-zinc-900/50 border-zinc-800'
                             }`}
                     >
                         {/* Best Value Badge */}
@@ -175,8 +175,8 @@ export default function PricingPage() {
                             onClick={() => handleSubscribe(plan.id)}
                             disabled={loading === plan.id}
                             className={`w-full py-3.5 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 ${plan.badge
-                                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:opacity-90'
-                                    : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                                ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:opacity-90'
+                                : 'bg-zinc-800 text-white hover:bg-zinc-700'
                                 } disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]`}
                         >
                             {loading === plan.id ? (

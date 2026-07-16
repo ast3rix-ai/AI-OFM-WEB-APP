@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { Lock, Loader2 } from 'lucide-react'
 
 interface GenerationCardProps {
@@ -83,12 +84,13 @@ export function GenerationCard({
         >
             {/* Base Image */}
             {imageUrl && (
-                <img
+                <Image
                     src={imageUrl}
                     alt={prompt || 'Generated image'}
-                    className={`w-full h-full object-cover transition-all duration-500 ${!isPaid ? 'blur-xl scale-110' : ''
-                        }`}
-                    loading="lazy"
+                    fill
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className={`object-cover transition-all duration-500 ${!isPaid ? 'blur-xl scale-110' : ''}`}
+                    unoptimized
                 />
             )}
 
